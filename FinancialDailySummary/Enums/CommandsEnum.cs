@@ -9,7 +9,16 @@ public static class CommandsEnum {
         Ibex35,        
         [Description("/sp500")]
         [IndexRequestValue("%5EGSPC")]
-        SP500,
+        SP500,  
+        [Description("/estx50")]
+        [IndexRequestValue("%5ESTOXX50E")]
+        ESTX50,
+        //[Description("/gold")]
+        //[IndexRequestValue("GC%3DF")]
+        //Gold,
+        [Description("/bitcoin")]
+        [IndexRequestValue("BTC-EUR")]
+        Bitcoin,
     }
 
     public static string[] GetListCommands()
@@ -43,11 +52,8 @@ public static class CommandsEnum {
     {
         foreach (Commands value in Enum.GetValues(typeof(Commands)))
         {
-            if (value.TryGetDescription(out string description)
-                && description.Equals(messageCommand)) 
-            {
+            if (value.TryGetDescription(out string description) && description.Equals(messageCommand)) 
                 return value;
-            }
         }
 
         throw new ArgumentException($"No se pudo convertir el literal '{messageCommand}' en un valor de Commands.");
