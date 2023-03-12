@@ -20,7 +20,7 @@ Next, add your BotToken to the secrets.json
 
 To add your custom secrets.json you need to follow next steps: 
 
-1. remove <UserSecretsId>3d9c90a9-cb8e-448a-976f-8de41b31bab8</UserSecretsId> from csproj
+1. remove < UserSecretsId > 3d9c90a9-cb8e-448a-976f-8de41b31bab8 < /UserSecretsId > from csproj
 2. To create your own secrets.json use: dotnet user-secrets init  
 3. Edit your secrets.json an add your bot's params
     {
@@ -32,6 +32,6 @@ To add your custom secrets.json you need to follow next steps:
 
 ### Remember
 
-The boy isn't deployed yet, in the future I will share my bot. 
+The bot is not deployed yet, in the future I will share it.
 
-This is a pet side proyect only to practice.
+This is a side project just for practice.
