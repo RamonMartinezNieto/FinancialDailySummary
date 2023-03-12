@@ -2,9 +2,9 @@
 
 internal class YahooFinancialClient : IFinancialClient<DataIndexModel>
 {
-    private HttpClient _client;
+    private readonly HttpClient _client;
 
-    private ILogger<YahooFinancialClient> _logger;
+    private readonly ILogger<YahooFinancialClient> _logger;
 
     public YahooFinancialClient(
         HttpClient client,
@@ -42,7 +42,7 @@ internal class YahooFinancialClient : IFinancialClient<DataIndexModel>
             index,
             ParamInterval(param)));
 
-    Func<Intervals, string> ParamInterval = (param) =>
+    readonly Func<Intervals, string> ParamInterval = (param) =>
         param.TryGetDescription(out string paramDescription) ? paramDescription : string.Empty;
 
 }

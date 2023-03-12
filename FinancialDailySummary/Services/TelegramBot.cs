@@ -9,10 +9,10 @@ namespace FinancialDailySummary.Services;
 
 internal class TelegramBot : ITelegramBot
 {
-    private ILogger<TelegramBot> _logger;
-    private BotSettings _botSettings;
-    private ITelegramBotClient _botClient;
-    private YahooFinancialClient _financialClient;
+    private readonly ILogger<TelegramBot> _logger;
+    private readonly BotSettings _botSettings;
+    private readonly ITelegramBotClient _botClient;
+    private readonly YahooFinancialClient _financialClient;
 
     public TelegramBot(
         IOptions<BotSettings> botSettings,

@@ -4,25 +4,21 @@ namespace FinancialDailySummary.Services;
 
 internal class Application : IApplication
 {
-    private ILogger<Application> _logger;
-    private ITelegramBot _telegramBot;
-    private YahooFinancialClient _client;
+    private readonly ILogger<Application> _logger;
+    private readonly ITelegramBot _telegramBot;
 
     public Application(
         ILogger<Application> logger,
-        ITelegramBot telegramBot,
-        YahooFinancialClient client)
+        ITelegramBot telegramBot)
     {
         _logger = logger;
         _telegramBot = telegramBot;
-        _client = client;
     }
     
 
     public void Run()
     {
         _logger.LogInformation("Starting application...");
-
         _telegramBot.StartBot();
     }
 }

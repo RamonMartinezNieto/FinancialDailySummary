@@ -2,7 +2,7 @@
 
 internal class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         IConfiguration Configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)

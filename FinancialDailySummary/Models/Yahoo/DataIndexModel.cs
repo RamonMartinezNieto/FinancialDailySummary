@@ -2,92 +2,76 @@
 
 public class DataIndexModel
 {
-    public Chart chart { get; set; }
+    public Chart Chart { get; set; }
 
     public string GetLastValue() =>
-        chart.result[0].indicators.quote[0].close.Last().ToString();
+        Chart.Result[0].Indicators.Quote[0].Close.Last().ToString();
 }
 
 public class Chart
 {
-    public Result[] result { get; set; }
-    public object error { get; set; }
+    public Result[] Result { get; set; }
+    public object Error { get; set; }
 }
 
 public class Result
 {
-    public Meta meta { get; set; }
-    public long[] timestamp { get; set; }
-    public Indicators indicators { get; set; }
+    public Meta Meta { get; set; }
+    public long[] Timestamp { get; set; }
+    public Indicators Indicators { get; set; }
 }
 
 public class Meta
 {
-    public string currency { get; set; }
-    public string symbol { get; set; }
-    public string exchangeName { get; set; }
-    public string instrumentType { get; set; }
-    public int firstTradeDate { get; set; }
-    public int regularMarketTime { get; set; }
-    public int gmtoffset { get; set; }
-    public string timezone { get; set; }
-    public string exchangeTimezoneName { get; set; }
-    public float regularMarketPrice { get; set; }
-    public float chartPreviousClose { get; set; }
-    public float? previousClose { get; set; } //no ta
-    public int? scale { get; set; } //no ta
-    public int priceHint { get; set; }
-    public Currenttradingperiod currentTradingPeriod { get; set; }
-    public Tradingperiod?[][] tradingPeriods { get; set; }  //no ta
-    public string dataGranularity { get; set; }
-    public string range { get; set; }
-    public string[] validRanges { get; set; }
+    public string Currency { get; set; }
+    public string Wymbol { get; set; }
+    public string ExchangeName { get; set; }
+    public string InstrumentType { get; set; }
+    public int FirstTradeDate { get; set; }
+    public int RegularMarketTime { get; set; }
+    public int Gmtoffset { get; set; }
+    public string Timezone { get; set; }
+    public string ExchangeTimezoneName { get; set; }
+    public float RegularMarketPrice { get; set; }
+    public float ChartPreviousClose { get; set; }
+    public float? PreviousClose { get; set; }
+    public int? Scale { get; set; }
+    public int PriceHint { get; set; }
+    public Currenttradingperiod CurrentTradingPeriod { get; set; }
+    public TimeData[][] TradingPeriods { get; set; }
+    public string DataGranularity { get; set; }
+    public string Range { get; set; }
+    public string[] ValidRanges { get; set; }
 }
 
 public class Currenttradingperiod
 {
-    public Pre pre { get; set; }
-    public Regular regular { get; set; }
-    public Post post { get; set; }
+    public TimeData Pre { get; set; }
+    public TimeData Regular { get; set; }
+    public TimeData Post { get; set; }
 }
 
-public class SharedData 
+public class TimeData 
 {
-    public string timezone { get; set; }
-    public int end { get; set; }
-    public int start { get; set; }
-    public int gmtoffset { get; set; }
-}
-
-public class Pre : SharedData
-{
-}
-
-public class Regular : SharedData
-{
-}
-
-public class Post : SharedData
-{
-}
-
-public class Tradingperiod : SharedData
-{
+    public string Timezone { get; set; }
+    public int End { get; set; }
+    public int Start { get; set; }
+    public int Gmtoffset { get; set; }
 }
 
 public class Indicators
 {
-    public Quote[] quote { get; set; }
-    public Adjclose?[] adjclose { get; set; }
+    public Quote[] Quote { get; set; }
+    public Adjclose[] Adjclose { get; set; }
 }
 
 public class Quote
 {
-    public float?[] open { get; set; }
-    public float?[] volume { get; set; }
-    public float?[] close { get; set; }
-    public float?[] low { get; set; }
-    public float?[] high { get; set; }
+    public float?[] Open { get; set; }
+    public float?[] Volume { get; set; }
+    public float?[] Close { get; set; }
+    public float?[] Low { get; set; }
+    public float?[] High { get; set; }
 }
 
 public class Adjclose
