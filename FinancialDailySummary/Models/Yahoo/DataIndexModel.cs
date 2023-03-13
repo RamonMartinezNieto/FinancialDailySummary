@@ -6,10 +6,29 @@ public class DataIndexModel
 {
     public Chart Chart { get; set; }
 
-    public string GetLastValue() =>
-        Chart.Result[0].Indicators.Quote[0].Close.Last()
+    private string GetLastCloseValue() =>
+        GetFormatedSttring(Chart.Result[0].Indicators.Quote[0].Close.Last());
+
+    private string GetPreviousClose() => 
+        GetFormatedSttring(Chart.Result[0].Meta.ChartPreviousClose);
+
+    private static string GetFormatedSttring(float? toFormat) 
+        => toFormat
             ?.ToString("0.00", CultureInfo.GetCultureInfo("es-ES"))
             .Replace(".", "");
+
+    public string GetMessage(CommandsEnum.Commands index)
+    {
+        StringBuilder builder = new();
+
+        builder.AppendLine(DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss"));
+        builder.AppendLine($"{ index.ToString() }");
+
+        builder.AppendLine(string.Format("{0,-30}{1}", "Previous:", GetPreviousClose()));
+        builder.AppendLine(string.Format("{0,-31}{1}", "Current:", GetLastCloseValue()));
+
+        return builder.ToString();
+    }
 
 }
 
@@ -29,7 +48,7 @@ public class Result
 public class Meta
 {
     public string Currency { get; set; }
-    public string Wymbol { get; set; }
+    public string Symbol { get; set; }
     public string ExchangeName { get; set; }
     public string InstrumentType { get; set; }
     public int FirstTradeDate { get; set; }

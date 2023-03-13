@@ -2,7 +2,7 @@
 
 public static class CommandsEnum {
 
-    internal enum Commands
+    public enum Commands
     {
         [Description("/ibex35")]
         [IndexRequestValue("%5EIBEX")]

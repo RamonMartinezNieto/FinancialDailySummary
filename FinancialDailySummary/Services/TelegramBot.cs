@@ -67,7 +67,7 @@ internal class TelegramBot : ITelegramBot
                 // TODO ramon Need to extracto repository or service layer O.O
                 var dataIndex = await _financialClient.GetDataIndex(comand, Intervals.OneDay);
 
-                await SentMessageAsync(message.Chat.Id, dataIndex.GetLastValue(), cancellationToken);
+                await SentMessageAsync(message.Chat.Id, dataIndex.GetMessage(comand), cancellationToken);
             }
             else 
                 await SentMessageAsync(message.Chat.Id, GetMessageListCommands("*Lista de comandos:*"), cancellationToken);
