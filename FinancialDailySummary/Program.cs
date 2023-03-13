@@ -1,4 +1,6 @@
-﻿namespace FinancialDailySummary;
+﻿using FinancialDailySummary.ExtensionMethods;
+
+namespace FinancialDailySummary;
 
 internal class Program
 {
@@ -13,7 +15,7 @@ internal class Program
         IHost _host = Host.CreateDefaultBuilder().ConfigureServices(
             services => {
 
-            services.ConfigureBotSettings(Configuration.GetSection("BotSettings"));
+            services.ConfigureBotSettings(Environment.GetEnvironmentVariable("FinacialDailySummary_BotToken"));
 
             services.AddLogging();
 

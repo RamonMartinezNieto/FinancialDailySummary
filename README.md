@@ -14,21 +14,18 @@ Steps:
 
 Documentation: https://core.telegram.org/bots/tutorial#obtain-your-bot-token
 
-### Add secrets.json
+### Add enviroment variable name
 
-Next, add your BotToken to the secrets.json 
+Next, add your BotToken as an environment variable
 
-To add your custom secrets.json you need to follow next steps: 
-
-1. remove < UserSecretsId > 3d9c90a9-cb8e-448a-976f-8de41b31bab8 < /UserSecretsId > from csproj
-2. To create your own secrets.json use: dotnet user-secrets init  
-3. Edit your secrets.json an add your bot's params
-    {
-      "BotSettings": {
-        "BotName": "Name of your bot",
-        "BotToken": "Token of your bot"
-      }
-    }
+1. In the appsettings.json set the name of your environment variable where is the token
+{
+  //....
+  },
+  "FinancialEnvironmentVariables": {
+    "BotToken": "NAME_OF_YOUR_VARIABLE"
+  }
+}
 
 ### Remember
 
