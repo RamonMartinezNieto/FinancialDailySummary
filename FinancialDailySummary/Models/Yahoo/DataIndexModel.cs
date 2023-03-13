@@ -1,11 +1,16 @@
-﻿namespace FinancialDailySummary.Models.Yahoo;
+﻿using System.Globalization;
+
+namespace FinancialDailySummary.Models.Yahoo;
 
 public class DataIndexModel
 {
     public Chart Chart { get; set; }
 
     public string GetLastValue() =>
-        Chart.Result[0].Indicators.Quote[0].Close.Last().ToString();
+        Chart.Result[0].Indicators.Quote[0].Close.Last()
+            ?.ToString("0.00", CultureInfo.GetCultureInfo("es-ES"))
+            .Replace(".", "");
+
 }
 
 public class Chart
