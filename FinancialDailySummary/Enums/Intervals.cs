@@ -2,7 +2,15 @@
 
 internal enum Intervals
 {
-    [Description("1d")]
+    [Description("1m")]
+    OneMin,
+    [Description("5m")]
+    FiveMin,    
+    [Description("5m")]
+    FifteenMin,    
+    [Description("15m")]
+    ThirteenMin,
+    [Description("30m")]
     OneDay,
     [Description("5d")]
     FiveDays,

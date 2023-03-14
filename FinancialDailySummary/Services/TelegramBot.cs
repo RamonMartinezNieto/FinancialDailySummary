@@ -64,9 +64,24 @@ internal class TelegramBot : ITelegramBot
             if (IsValidCommand(messageText)) {
                 Commands comand = ParseEnumFromDescription(messageText);
 
-                var dataIndex = await _financialClient.GetDataIndex(comand, Intervals.OneDay);
+                var dataIndex = await _financialClient.GetDataIndex(comand, Intervals.ThirteenMin);
 
-                await SentMessageAsync(message.Chat.Id, dataIndex.GetMessage(comand), cancellationToken);
+                //extract
+                var labels = dataIndex.Chart.Result[0].Timestamp
+                    .Select(x => new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(x).ToString("HH:mm:ss"))
+                    .ToArray();
+
+                var data = dataIndex.Chart.Result[0].Indicators.Quote[0].Close
+                    .Select(x => (int?)x ).ToArray();
+
+                //todo need refactor
+                var createImage = new ChartService(labels, data, comand);
+
+                await SentImage(message.Chat.Id,
+                    createImage.GetPathImage(),
+                    dataIndex.GetMessage(comand), 
+                    cancellationToken);
+                //await SentMessageAsync(message.Chat.Id, dataIndex.GetMessage(comand), cancellationToken);
             }
             else 
                 await SentMessageAsync(message.Chat.Id, GetMessageListCommands("*Lista de comandos:*"), cancellationToken);
@@ -90,6 +105,23 @@ internal class TelegramBot : ITelegramBot
                  disableNotification: true,
                  parseMode: ParseMode.MarkdownV2,
                  cancellationToken: cts);
+
+    
+
+    private async Task<Message> SentImage(
+        ChatId chatId,
+        string pathImage,
+        string text, 
+        CancellationToken cts)
+        => await _botClient.SendPhotoAsync(
+                 chatId: chatId,
+                 photo: pathImage,
+                 caption: text,
+                 disableNotification: true,
+                 parseMode: ParseMode.MarkdownV2,
+                 cancellationToken: cts);
+
+    
 
     private Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
