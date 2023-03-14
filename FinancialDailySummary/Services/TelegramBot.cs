@@ -76,9 +76,10 @@ internal class TelegramBot : ITelegramBot
 
                 //todo need refactor
                 var createImage = new ChartService(labels, data, comand);
+                var shorturl = createImage.Chart.GetShortUrl();
 
                 await SentImage(message.Chat.Id,
-                    createImage.GetPathImage(),
+                    createImage.Chart.GetShortUrl(),
                     dataIndex.GetMessage(comand), 
                     cancellationToken);
                 //await SentMessageAsync(message.Chat.Id, dataIndex.GetMessage(comand), cancellationToken);
