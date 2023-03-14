@@ -1,30 +1,44 @@
-﻿namespace FinancialDailySummary.Clients;
+﻿
+using Microsoft.Extensions.Caching.Memory;
+
+namespace FinancialDailySummary.Clients;
 
 internal class YahooFinancialClient : IFinancialClient<DataIndexModel>
 {
     private readonly HttpClient _client;
 
     private readonly ILogger<YahooFinancialClient> _logger;
+    private readonly IMemoryCache _cache;
 
     public YahooFinancialClient(
         HttpClient client,
-        ILogger<YahooFinancialClient> logger)
+        ILogger<YahooFinancialClient> logger,
+        IMemoryCache cache)
     {
         _client = client;
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<DataIndexModel> GetDataIndex(CommandsEnum.Commands index, Intervals interval)
     {
-        try { 
+        try {
+
+            if (_cache.TryGetValue(index, out var data)) 
+                return (DataIndexModel)data;
+
             Uri uri = GetUri(index.GetIndexRequest(), interval);
 
             HttpResponseMessage response = await _client.GetAsync(uri);
 
             if(response != null && response.IsSuccessStatusCode) 
-                return await response.Content.ReadFromJsonAsync<DataIndexModel>();
+            {
+                DataIndexModel formatResponse = await response.Content.ReadFromJsonAsync<DataIndexModel>();
+                _cache.Set<DataIndexModel>(index, formatResponse, TimeSpan.FromMinutes(5));
+                return formatResponse;
+            }
 
-            if(response != null)
+            if (response != null)
                 _logger.LogWarning($"Bad response StausCode: {response.StatusCode}");
 
             return new DataIndexModel();

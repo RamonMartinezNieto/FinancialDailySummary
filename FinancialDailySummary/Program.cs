@@ -1,6 +1,4 @@
-﻿using FinancialDailySummary.ExtensionMethods;
-
-namespace FinancialDailySummary;
+﻿namespace FinancialDailySummary;
 
 internal class Program
 {
@@ -25,8 +23,9 @@ internal class Program
                     c.Timeout = TimeSpan.FromSeconds(30);
                 });
 
-            services.AddTransient<IFinancialClient<DataIndexModel>, YahooFinancialClient>();  
+            services.AddMemoryCache();
 
+            services.AddTransient<IFinancialClient<DataIndexModel>, YahooFinancialClient>();  
             services.AddSingleton<ITelegramBot,TelegramBot>();  
             services.AddSingleton<IApplication, Application>();
 

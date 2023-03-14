@@ -64,7 +64,6 @@ internal class TelegramBot : ITelegramBot
             if (IsValidCommand(messageText)) {
                 Commands comand = ParseEnumFromDescription(messageText);
 
-                // TODO ramon Need to extracto repository or service layer O.O
                 var dataIndex = await _financialClient.GetDataIndex(comand, Intervals.OneDay);
 
                 await SentMessageAsync(message.Chat.Id, dataIndex.GetMessage(comand), cancellationToken);
