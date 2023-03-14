@@ -12,24 +12,36 @@ public class DataIndexModel
     private string GetPreviousClose() => 
         GetFormatedSttring(Chart.Result[0].Meta.ChartPreviousClose);
 
-    private static string GetFormatedSttring(float? toFormat) 
+    private static string GetFormatedSttring(float? toFormat, string prefix = "") 
         => toFormat
-            ?.ToString("0.00", CultureInfo.GetCultureInfo("es-ES"))
+            ?.ToString($"{prefix} 0.00", CultureInfo.GetCultureInfo("es-ES"))
             .Replace(".", "");
 
     public string GetMessage(CommandsEnum.Commands index)
     {
         StringBuilder builder = new();
 
-        builder.AppendLine(DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss"));
-        builder.AppendLine($"{ index.ToString() }");
+        CultureInfo culture = new ("es-ES");
+        string date = DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss", culture);
 
+        builder.AppendLine(culture.TextInfo.ToTitleCase(date));
+        builder.AppendLine($"*{ index.ToString().PadLeft(30) }*");
         builder.AppendLine(string.Format("{0,-30}{1}", "Previous:", GetPreviousClose()));
         builder.AppendLine(string.Format("{0,-31}{1}", "Current:", GetLastCloseValue()));
+        builder.AppendLine(string.Format("{0,-30}{1}%", "Variaton:", GetDiffPercentil()));
 
         return builder.ToString();
     }
 
+    private string GetDiffPercentil() 
+    {
+        var initialValue = Chart.Result[0].Meta.ChartPreviousClose;
+        var diff = Chart.Result[0].Indicators.Quote[0].Close.Last() - initialValue;
+        var percentile = (diff / initialValue) * 100;
+
+        string prefix = percentile > 0 ? "▲" : "▼";
+        return GetFormatedSttring(percentile, prefix);
+    }
 }
 
 public class Chart

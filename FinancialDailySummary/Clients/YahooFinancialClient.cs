@@ -1,7 +1,4 @@
-﻿
-using Microsoft.Extensions.Caching.Memory;
-
-namespace FinancialDailySummary.Clients;
+﻿namespace FinancialDailySummary.Clients;
 
 internal class YahooFinancialClient : IFinancialClient<DataIndexModel>
 {
