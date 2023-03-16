@@ -65,9 +65,9 @@ internal class TelegramBot : ITelegramBot
 
         try { 
             if (IsValidCommand(messageText)) {
-                Commands comand = ParseEnumFromDescription(messageText);
+                Commands command = ParseEnumFromDescription(messageText);
 
-                var dataIndex = await _financialClient.GetDataIndex(comand, Intervals.ThirteenMin);
+                var dataIndex = await _financialClient.GetDataIndex(command, Intervals.ThirteenMin);
 
                 //extract
                 var labels = dataIndex.Chart.Result[0].Timestamp
@@ -77,9 +77,9 @@ internal class TelegramBot : ITelegramBot
                 var data = dataIndex.Chart.Result[0].Indicators.Quote[0].Close
                     .Select(x => (int?)x ).ToArray();
 
-                await SentImage(message.Chat.Id,
-                    _chartService.GetUrlChart(labels, data, comand),
-                    dataIndex.GetMessage(comand), 
+                await SentImageAsync(message.Chat.Id,
+                    _chartService.GetUrlChart(labels, data, command),
+                    dataIndex.GetMessage(command), 
                     cancellationToken);
                 //await SentMessageAsync(message.Chat.Id, dataIndex.GetMessage(comand), cancellationToken);
             }
@@ -108,7 +108,7 @@ internal class TelegramBot : ITelegramBot
 
     
 
-    private async Task<Message> SentImage(
+    private async Task<Message> SentImageAsync(
         ChatId chatId,
         string pathImage,
         string text, 
