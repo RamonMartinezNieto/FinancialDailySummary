@@ -25,6 +25,7 @@ internal class Program
 
             services.AddMemoryCache();
 
+            services.AddScoped<IChartService, ChartService>();
             services.AddTransient<IFinancialClient<DataIndexModel>, YahooFinancialClient>();  
             services.AddSingleton<ITelegramBot,TelegramBot>();  
             services.AddSingleton<IApplication, Application>();

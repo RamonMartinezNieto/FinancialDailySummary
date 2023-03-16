@@ -1,68 +1,94 @@
-﻿using System.Text.Json;
-using FinancialDailySummary.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace FinancialDailySummary.Services
+namespace FinancialDailySummary.Services;
+
+public class ChartService : IChartService
 {
-    public class ChartService
+    private IMemoryCache _cache;
+
+    private QuickChart.Chart _chart;
+
+    public ChartService(IMemoryCache cache)
     {
-        private readonly CommandsEnum.Commands _index;
+        _cache = cache;
+    }
 
-        public LinearChart LinearChart { get; private set; }
+    public string GetUrlChart(string[] labels,
+        int?[] data,
+        CommandsEnum.Commands index)
+    {
+        var cacheKey = $"{index}UriChart";
 
-        public QuickChart.Chart Chart { get; set; }
+        if (_cache.TryGetValue(cacheKey, out string uriChart))
+            return uriChart;
 
-        public ChartService(
-            string[] labels,
-            int?[] data,
-            CommandsEnum.Commands index)
+        _chart = GenerateChart(labels, data, index);
+        var url = _chart.GetShortUrl();
+
+        _cache.Set(cacheKey, url, TimeSpan.FromMinutes(5));
+        return url;
+    }
+
+    private QuickChart.Chart GenerateChart(string[] labels,
+        int?[] data,
+        CommandsEnum.Commands index)
+    {
+        QuickChart.Chart chart = new QuickChart.Chart();
+        chart = new();
+        chart.Width = 500;
+        chart.Height = 300;
+        chart.Version = "2.9.4";
+        chart.Config = GetLinearChartJson(labels, data, index);
+        chart.DevicePixelRatio = 2.0;
+
+        return chart;
+    }
+
+    private static string GetLinearChartJson(string[] labels, int?[] data, CommandsEnum.Commands index)
+    {
+        var linearChart = new
         {
-            //TODO NEED REFACTOR or construct json direcly
-            _index = index;
+            type = "line",
+            data = new
+            {
+                labels = labels,
+                datasets = new[]
+                {
+                     new
+                     {
+                         label = index.ToString(),
+                         data = data,
+                         fill = false,
+                         borderColor = "blue"
+                     }
+                 }
+            },
+            options = new
+            {
+                responsive = true,
+                legend = false,
+                title = new
+                {
+                    text = index.ToString(),
+                    display = true
+                },
+                scales = new
+                {
+                    yAxes = new[]
+                    {
+                        new
+                        {
+                            ticks = new
+                            {
+                                suggestedMin = (int)data.Min() - 5,
+                                suggestedMax = (int)data.Max() + 5
+                            }
+                        }
+                    }
+                }
+            }
+        };
 
-
-            LinearChart = new LinearChart();
-            LinearChart.type = "line";
-
-            //labels
-            LinearChart.data.labels = new string[labels.Length];
-            LinearChart.data.labels = labels;
-
-            //Dataset
-            LinearChart.data.datasets = new Dataset[1];
-            LinearChart.data.datasets[0] = new();
-            LinearChart.data.datasets[0].label = index.ToString();
-            LinearChart.data.datasets[0].data = data;
-            LinearChart.data.datasets[0].fill = false;
-            LinearChart.data.datasets[0].borderColor = "blue";
-
-            // Options
-            LinearChart.options.responsive = true;
-            LinearChart.options.legend = false;
-            LinearChart.options.title.text = index.ToString(); 
-            LinearChart.options.title.display = true;
-
-            LinearChart.options.scales.yAxes = new Yax[1];
-            LinearChart.options.scales.yAxes[0] = new Yax();
-            LinearChart.options.scales.yAxes[0].ticks = new Ticks();
-            LinearChart.options.scales.yAxes[0].ticks.suggestedMin = (int)data.Min() - 5;
-            LinearChart.options.scales.yAxes[0].ticks.suggestedMax = (int)data.Max() + 5;
-
-
-            var chartDataJson = JsonConvert.SerializeObject(LinearChart);
-
-
-            Chart = new ();
-            Chart.Width = 500;
-            Chart.Height = 300;
-            Chart.Version = "2.9.4";
-            Chart.Config = chartDataJson;
-            Chart.DevicePixelRatio = 2.0;
-
-            
-            // Or write it to a file
-            //qc.ToFile($"{index}chart.png");
-
-        }
+        return JsonConvert.SerializeObject(linearChart);
     }
 }

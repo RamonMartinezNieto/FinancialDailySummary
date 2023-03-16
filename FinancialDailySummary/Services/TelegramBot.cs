@@ -13,16 +13,19 @@ internal class TelegramBot : ITelegramBot
     private readonly BotSettings _botSettings;
     private readonly ITelegramBotClient _botClient;
     private readonly YahooFinancialClient _financialClient;
+    private readonly IChartService _chartService;
 
     public TelegramBot(
         IOptions<BotSettings> botSettings,
         ILogger<TelegramBot> logger,
+        IChartService chartService,
         YahooFinancialClient financialClient)
     {
         _logger = logger;
         _botSettings = botSettings.Value;
         _botClient = new TelegramBotClient(_botSettings.BotToken);
         _financialClient = financialClient;
+        _chartService = chartService;
     }
 
 
@@ -74,12 +77,10 @@ internal class TelegramBot : ITelegramBot
                 var data = dataIndex.Chart.Result[0].Indicators.Quote[0].Close
                     .Select(x => (int?)x ).ToArray();
 
-                //todo need refactor
-                var createImage = new ChartService(labels, data, comand);
-                var shorturl = createImage.Chart.GetShortUrl();
+                var eso = _chartService.GetUrlChart(labels, data, comand);
 
                 await SentImage(message.Chat.Id,
-                    createImage.Chart.GetShortUrl(),
+                    _chartService.GetUrlChart(labels, data, comand),
                     dataIndex.GetMessage(comand), 
                     cancellationToken);
                 //await SentMessageAsync(message.Chat.Id, dataIndex.GetMessage(comand), cancellationToken);
