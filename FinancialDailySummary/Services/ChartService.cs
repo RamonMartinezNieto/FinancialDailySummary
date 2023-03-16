@@ -6,7 +6,11 @@ public class ChartService : IChartService
 {
     private IMemoryCache _cache;
 
-    private QuickChart.Chart _chart;
+    private readonly int _cacheExpirationMinutes = 10;
+    private readonly int _widthChart = 500;
+    private readonly int _heightChart = 300;
+    private readonly string _versionChart = "2.9.4";
+    private readonly float _devicePixelRatio = 2.0f;
 
     public ChartService(IMemoryCache cache)
     {
@@ -22,27 +26,24 @@ public class ChartService : IChartService
         if (_cache.TryGetValue(cacheKey, out string uriChart))
             return uriChart;
 
-        _chart = GenerateChart(labels, data, index);
-        var url = _chart.GetShortUrl();
+        var chart = GenerateChart(labels, data, index);
+        var url = chart.GetShortUrl();
 
-        _cache.Set(cacheKey, url, TimeSpan.FromMinutes(5));
+        _cache.Set(cacheKey, url, TimeSpan.FromMinutes(_cacheExpirationMinutes));
         return url;
     }
 
     private QuickChart.Chart GenerateChart(string[] labels,
         int?[] data,
         CommandsEnum.Commands index)
-    {
-        QuickChart.Chart chart = new QuickChart.Chart();
-        chart = new();
-        chart.Width = 500;
-        chart.Height = 300;
-        chart.Version = "2.9.4";
-        chart.Config = GetLinearChartJson(labels, data, index);
-        chart.DevicePixelRatio = 2.0;
-
-        return chart;
-    }
+        => new()
+        {
+            Width = _widthChart,
+            Height = _heightChart,
+            Version = _versionChart,
+            Config = GetLinearChartJson(labels, data, index),
+            DevicePixelRatio = _devicePixelRatio
+        };
 
     private static string GetLinearChartJson(string[] labels, int?[] data, CommandsEnum.Commands index)
     {

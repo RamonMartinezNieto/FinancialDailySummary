@@ -77,8 +77,6 @@ internal class TelegramBot : ITelegramBot
                 var data = dataIndex.Chart.Result[0].Indicators.Quote[0].Close
                     .Select(x => (int?)x ).ToArray();
 
-                var eso = _chartService.GetUrlChart(labels, data, comand);
-
                 await SentImage(message.Chat.Id,
                     _chartService.GetUrlChart(labels, data, comand),
                     dataIndex.GetMessage(comand), 
