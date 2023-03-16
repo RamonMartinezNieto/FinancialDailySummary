@@ -4,7 +4,7 @@ namespace FinancialDailySummary.Services;
 
 public class ChartService : IChartService
 {
-    private IMemoryCache _cache;
+    private readonly IMemoryCache _cache;
 
     private readonly int _cacheExpirationMinutes = 10;
     private readonly int _widthChart = 500;
@@ -52,13 +52,13 @@ public class ChartService : IChartService
             type = "line",
             data = new
             {
-                labels = labels,
+                labels,
                 datasets = new[]
                 {
                      new
                      {
                          label = index.ToString(),
-                         data = data,
+                         data,
                          fill = false,
                          borderColor = "blue"
                      }

@@ -81,7 +81,6 @@ internal class TelegramBot : ITelegramBot
                     _chartService.GetUrlChart(labels, data, command),
                     dataIndex.GetMessage(command), 
                     cancellationToken);
-                //await SentMessageAsync(message.Chat.Id, dataIndex.GetMessage(comand), cancellationToken);
             }
             else 
                 await SentMessageAsync(message.Chat.Id, GetMessageListCommands("*Lista de comandos:*"), cancellationToken);
