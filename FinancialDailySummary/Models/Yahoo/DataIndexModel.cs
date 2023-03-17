@@ -12,10 +12,18 @@ public class DataIndexModel
     private string GetPreviousClose() => 
         GetFormatedSttring(Chart.Result[0].Meta.ChartPreviousClose);
 
-    private static string GetFormatedSttring(float? toFormat, string prefix = "") 
-        => toFormat
-            ?.ToString($"{prefix} 0.00", CultureInfo.GetCultureInfo("es-ES"))
-            .Replace(".", "");
+    private static string GetFormatedSttring(float? toFormat, string prefix = "")
+    {
+        if (toFormat.HasValue)
+        {
+            var culture = CultureInfo.GetCultureInfo("es-ES");
+            string sign = toFormat.Value < 0 ? "\\-" : "";
+            float absValue = Math.Abs(toFormat.Value);
+            var formattedValue = $"{prefix} {sign}{absValue.ToString("0.00", culture)}".Replace(".", "");
+            return formattedValue;
+        }
+        return null;
+    }
 
     public string GetMessage(CommandsEnum.Commands index)
     {
