@@ -68,14 +68,9 @@ internal class TelegramBot : ITelegramBot
                 Commands command = ParseEnumFromDescription(messageText);
 
                 var dataIndex = await _financialClient.GetDataIndex(command, Intervals.ThirteenMin);
-
-                //extract
-                var labels = dataIndex.Chart.Result[0].Timestamp
-                    .Select(x => new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(x).ToString("HH:mm:ss"))
-                    .ToArray();
-
-                var data = dataIndex.Chart.Result[0].Indicators.Quote[0].Close
-                    .Select(x => (int?)x ).ToArray();
+                
+                var labels = dataIndex.GetLabels();
+                var data = dataIndex.GetData();
 
                 await SentImageAsync(message.Chat.Id,
                     _chartService.GetUrlChart(labels, data, command),

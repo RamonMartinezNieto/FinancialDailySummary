@@ -6,6 +6,8 @@ public class DataIndexModel
 {
     public Chart Chart { get; set; }
 
+    public DateTime DateTimeMessage { get; set; }
+
     private string GetLastCloseValue() =>
         GetFormatedSttring(Chart.Result[0].Indicators.Quote[0].Close.Last());
 
@@ -30,7 +32,7 @@ public class DataIndexModel
         StringBuilder builder = new();
 
         CultureInfo culture = new ("es-ES");
-        string date = DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss", culture);
+        string date = DateTimeMessage.ToString("dddd, dd MMMM yyyy HH:mm:ss", culture);
 
         builder.AppendLine(culture.TextInfo.ToTitleCase(date));
         builder.AppendLine($"*{ index.ToString().PadLeft(30) }*");
@@ -50,6 +52,15 @@ public class DataIndexModel
         string prefix = percentile > 0 ? "▲" : "▼";
         return GetFormatedSttring(percentile, prefix);
     }
+
+    public string[] GetLabels()
+        => Chart.Result[0].Timestamp
+                    .Select(x => new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(x).ToString("HH:mm:ss"))
+                    .ToArray();
+
+    public int?[] GetData()
+        => Chart.Result[0].Indicators.Quote[0].Close
+                  .Select(x => (int?)x).ToArray();
 }
 
 public class Chart

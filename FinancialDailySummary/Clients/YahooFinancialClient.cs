@@ -31,6 +31,7 @@ internal class YahooFinancialClient : IFinancialClient<DataIndexModel>
             if(response != null && response.IsSuccessStatusCode) 
             {
                 DataIndexModel formatResponse = await response.Content.ReadFromJsonAsync<DataIndexModel>();
+                formatResponse.DateTimeMessage = DateTime.Now;
                 _cache.Set<DataIndexModel>(index, formatResponse, TimeSpan.FromMinutes(5));
                 return formatResponse;
             }
