@@ -13,7 +13,9 @@ internal class Program
         IHost _host = Host.CreateDefaultBuilder().ConfigureServices(
             services => {
 
-            services.ConfigureBotSettings(Environment.GetEnvironmentVariable("FinacialDailySummary_BotToken"));
+            services.ConfigureBotSettings(
+                Environment.GetEnvironmentVariable(
+                    Configuration.GetSection("FinancialEnvironmentVariables:BotToken").Value));
 
             services.AddLogging();
 
